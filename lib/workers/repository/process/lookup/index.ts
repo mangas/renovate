@@ -385,8 +385,12 @@ export async function lookupUpdates(
     }
     // update digest for all
     for (const update of res.updates) {
+      let newValue = update.newValue;
+      if (update.newValue.includes('+incompatible')) {
+        newValue = newValue.replace('+incompatible', '');
+      }
       if (config.pinDigests || config.currentDigest) {
-        update.newDigest = await getDigest(config, update.newValue);
+        update.newDigest = await getDigest(config, newValue);
         if (update.newDigest) {
           update.newDigestShort = update.newDigest
             .replace('sha256:', '')
